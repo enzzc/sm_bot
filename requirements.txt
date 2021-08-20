@@ -1,0 +1,5 @@
+spacy==3.1.1
+fr-core-news-sm @ https://github.com/explosion/spacy-models/releases/download/fr_core_news_sm-3.1.0/fr_core_news_sm-3.1.0-py3-none-any.whl
+discord==1.7.3
+hiredis==2.0.0
+aioredis==2.0.0
