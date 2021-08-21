@@ -64,13 +64,14 @@ def shuffle_objects(base_sentence, pick_sentence):
 
 
 def make_sentence(s1, s2):
-    # Try 500 times before giving up
-    for _ in range(500):
-        if random.randint(0, 1):
-            sentence = shuffle_objects(s1, s2)
-        else:
-            sentence = shuffle_objects(s2, s1)
+    if random.randint(0, 1):  # Randomly permute s1 and s2
+        s1, s2 = s2, s1
 
-        if sentence is not None:
-            sentence = ' '.join(sentence.split())
-            return sentence
+    sentence = shuffle_objects(s1, s2)
+    # Try the other combination if the previous one has failed.
+    if sentence is None:
+        sentence = shuffle_objects(s2, s1)
+
+    if sentence is not None:
+        sentence = ' '.join(sentence.split())
+        return sentence

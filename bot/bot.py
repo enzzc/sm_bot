@@ -23,16 +23,26 @@ async def on_message(message):
         return
 
     if client.user in message.mentions:
-        print('mentions')
-        async with redis.pipeline() as pipe:
-            s1, s2 = await (pipe.srandmember(f'{PREFIX}:author1')
-                                .srandmember(f'{PREFIX}:author2')
-                                .execute())
-        sentence = sm.make_sentence(s1.decode('utf-8'), s2.decode('utf-8'))
-        if sentence:
-            await message.reply(sentence)
-        else:
-            await message.reply("Je suis à court d'idées :smirk:")
+
+        if '!ping' in message.content:
+            await message.channel.send('pong')
+            return
+
+        for _ in range(10):  # Try 10 times before giving up
+            async with redis.pipeline() as pipe:
+                s1, s2 = await (pipe.srandmember(f'{PREFIX}:author1')
+                                    .srandmember(f'{PREFIX}:author2')
+                                    .execute())
+            sentence = sm.make_sentence(s1.decode('utf-8'), s2.decode('utf-8'))
+            if sentence is not None:
+                break
+
+        # If we are unlucky and haven't found any combination that
+        # makes a sentence, then we fall back to the default message.
+        if sentence is None:
+            sentence = "Je suis à court d'idées :smirk:"
+
+        await message.reply(sentence)
 
 
 if __name__ == '__main__':
