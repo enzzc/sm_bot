@@ -64,7 +64,8 @@ def shuffle_objects(base_sentence, pick_sentence):
 
 
 def make_sentence(s1, s2):
-    while True:
+    # Try 500 times before giving up
+    for _ in range(500):
         if random.randint(0, 1):
             sentence = shuffle_objects(s1, s2)
         else:

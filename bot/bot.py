@@ -9,6 +9,7 @@ PREFIX = 'sm_bot'
 
 client = discord.Client()
 redis = aioredis.from_url(os.getenv('REDIS_URL', 'redis://localhost:6379/0'))
+print(redis)
 
 
 @client.event
@@ -22,10 +23,16 @@ async def on_message(message):
         return
 
     if client.user in message.mentions:
-        s1 = await redis.srandmember(f'{PREFIX}:author1')
-        s2 = await redis.srandmember(f'{PREFIX}:author2')
+        print('mentions')
+        async with redis.pipeline() as pipe:
+            s1, s2 = await (pipe.srandmember(f'{PREFIX}:author1')
+                                .srandmember(f'{PREFIX}:author2')
+                                .execute())
         sentence = sm.make_sentence(s1.decode('utf-8'), s2.decode('utf-8'))
-        await message.reply(sentence)
+        if sentence:
+            await message.reply(sentence)
+        else:
+            await message.reply("Je suis à court d'idées :smirk:")
 
 
 if __name__ == '__main__':
