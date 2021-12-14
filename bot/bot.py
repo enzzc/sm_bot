@@ -22,6 +22,15 @@ EMOJIS = [
     ':star_struck:',
     ':money_mouth:',
     ':money_with_wings:',
+    ':rocket: :rocket: :rocket:',
+    ':partying_face:',
+    ':yum:',
+    ':pray:',
+    ':man_facepalm:',
+    ':exploding_head:',
+    ':fearful:',
+    ':nerd:',
+    ':shushing_face:',
 ]
 
 client = discord.Client()
@@ -70,7 +79,10 @@ async def on_message(message):
     if sentence is None:
         sentence = "Je suis à court d'idées"
 
-    emoji = random.choice(EMOJIS)
+    if 'allema' in sentence.lower():
+        emoji = ':flag_de:'
+    else:
+        emoji = random.choice(EMOJIS)
     await message.reply(sentence + ' ' + emoji)
 
 
